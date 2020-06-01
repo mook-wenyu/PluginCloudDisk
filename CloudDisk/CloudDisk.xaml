@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="CloudDisk.CloudDisk"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
+             xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+             xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             xmlns:miniblinkpinvoke="clr-namespace:MiniBlinkPinvoke;assembly=MiniBlink"
+             xmlns:local="clr-namespace:CloudDisk"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="1024">
+    <Grid x:Name="CloudDiskGrid" >
+        <Grid x:Name="BrowserGrid">
+
+            <wfi:WindowsFormsHost x:Name="BrowserWFH" Margin="0,0,-0.4,0.4">
+                <wf:TabControl x:Name="BrowserTab" SelectedIndexChanged="BrowserTab_SelectedIndexChanged"/>
+                <!--<miniblinkpinvoke:BlinkBrowser x:Name="Browser" OnUrlChangeCall="Browser_OnUrlChangeCall" DocumentReadyCallback="Browser_DocumentReadyCallback" OnDownloadFile="Browser_OnDownloadFile" OnCreateViewEvent="Browser_OnCreateViewEvent"/>-->
+            </wfi:WindowsFormsHost>
+        </Grid>
+        <Grid x:Name="FileListGrid">
+
+            <ListBox x:Name="PanFileDir" Margin="10,0,196,0" VerticalAlignment="Top" Height="32" PreviewMouseDown="PanFileDir_PreviewMouseDown" MouseLeftButtonUp="PanFileDir_MouseLeftButtonUp" >
+                <ListBox.Template>
+                    <ControlTemplate TargetType="{x:Type ListBox}">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel Orientation="Horizontal" IsItemsHost="True" ScrollViewer.CanContentScroll="True"/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
+
+            <DataGrid x:Name="FileDataListGrid" Margin="0,32" 
+                      pu:DataGridHelper.SelectedBackground="#44B5B5B5"
+                      pu:DataGridHelper.HoverBackground="#22B5B5B5"
+                      ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" SelectionUnit="FullRow" SelectionMode="Extended" 
+                      LoadingRow="FileDataListGrid_LoadingRow" MouseLeftButtonUp="FileDataListGrid_MouseLeftButtonUp" MouseDoubleClick="FileDataListGrid_MouseDoubleClick"
+                      ScrollViewer.ScrollChanged="FileDataListGrid_ScrollChanged"
+                      >
+                <DataGrid.Columns>
+                    <!-- <DataGridCheckBoxColumn Width="40" Binding="{Binding IsCheck}" /> -->
+
+                    <DataGridTemplateColumn Width="40" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Name="FileStatus" IsChecked="{Binding IsCheck}" Click="FileStatus_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Width="*"
+                                                Header="文件名" Binding="{Binding Name}" IsReadOnly="True" />
+                    <DataGridTextColumn Width="160"
+                                                Header="大小" Binding="{Binding Size}" IsReadOnly="True" />
+                    <DataGridTextColumn Width="240"
+                                                Header="修改日期" Binding="{Binding Time}" IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StatusBar Height="32" VerticalAlignment="Bottom">
+
+                <Label x:Name="PanFileLoadNum" Content="" Width="180"/>
+
+            </StatusBar>
+
+
+        </Grid>
+    </Grid>
+</UserControl>
